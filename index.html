@@ -50,25 +50,25 @@
   .add-task-btn{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:white;border:none;padding:10px 16px;border-radius:9px;font-weight:600;font-size:13.5px;cursor:pointer;margin:0 4px 18px;}
   .add-task-btn:hover{background:#111827;}
 
-  /* ---- Task groups (업무제목) ---- */
-  .grouplist{display:flex;flex-direction:column;gap:14px;padding:0 4px;}
-  .group-card{background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow-pin);}
-  .group-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;}
-  .group-title{font-family:'Space Grotesk';font-weight:700;font-size:15.5px;}
-  .group-actions{display:flex;gap:6px;flex:none;}
-  .icon-btn{border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--ink-soft);cursor:pointer;}
+  /* ---- Task table (아사나 스타일) ---- */
+  .table-wrap{background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-pin);}
+  .table-header{display:grid;grid-template-columns:28px 1fr 100px 92px 24px;gap:10px;align-items:center;padding:9px 16px;font-size:10.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;background:var(--paper);border-bottom:1px solid var(--line);}
+  .group-section-head{display:flex;align-items:center;gap:8px;padding:10px 16px;cursor:pointer;background:#F5F6F8;border-bottom:1px solid var(--line);border-top:1px solid var(--line);}
+  .group-section:first-child .group-section-head{border-top:none;}
+  .group-section-head:hover{background:#EFF1F3;}
+  .collapse-tri{font-size:9px;color:var(--ink-soft);display:inline-block;transition:transform .15s;width:10px;}
+  .collapse-tri.collapsed{transform:rotate(-90deg);}
+  .group-title{font-family:'Space Grotesk';font-weight:700;font-size:14px;flex:1;}
+  .icon-btn{border:1px solid var(--line);background:var(--paper-raised);border-radius:7px;padding:4px 9px;font-size:11.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;flex:none;}
   .icon-btn:hover{color:var(--ink);}
   .icon-btn.danger:hover{color:var(--coral);border-color:var(--coral);}
 
-  .sub-row{display:flex;align-items:center;gap:8px;padding:8px 6px;border-radius:8px;border-bottom:1px solid var(--paper);}
-  .sub-row:last-child{border-bottom:none;}
-  .sub-row:hover{background:var(--paper);}
-  .status-check{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--paper-raised);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:12px;font-weight:900;color:transparent;line-height:1;}
-  .status-check.doing{border-color:var(--amber);}
-  .status-check.doing::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--amber);}
+  .table-row{display:grid;grid-template-columns:28px 1fr 100px 92px 24px;gap:10px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--paper);}
+  .table-row:hover{background:#FAFBFC;}
+  .status-check{flex:none;width:19px;height:19px;border-radius:50%;border:1.5px solid var(--line);background:var(--paper-raised);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:11px;font-weight:900;color:transparent;line-height:1;}
   .status-check.done{border-color:var(--teal);background:var(--teal);color:white;}
   .status-check.done::after{content:'✓';}
-  .sub-content-wrap{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;overflow:hidden;white-space:nowrap;}
+  .sub-content-wrap{min-width:0;display:flex;align-items:baseline;gap:8px;overflow:hidden;white-space:nowrap;}
   .sub-content-text{flex:none;font-size:13.5px;cursor:text;padding:3px 5px;border-radius:5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
   .sub-content-text:hover{background:#fff;box-shadow:0 0 0 1px var(--line) inset;}
   .sub-content-text.done{color:var(--ink-soft);text-decoration:line-through;}
@@ -76,24 +76,22 @@
   .assignee-stack{display:flex;align-items:center;flex:none;}
   .assignee-stack .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--paper-raised);margin-left:-6px;display:flex;align-items:center;justify-content:center;color:white;font-size:9px;font-weight:700;}
   .assignee-stack .dot:first-child{margin-left:0;}
-  .sub-due{flex:none;font-family:'JetBrains Mono';font-size:10.5px;padding:3px 7px;border-radius:6px;background:var(--paper);color:var(--ink-soft);cursor:pointer;border:none;}
-  .sub-due:hover{box-shadow:0 0 0 1px var(--line) inset;}
-  .sub-due.overdue{background:#FBE4DC;color:var(--coral);}
+  .sub-due{flex:none;border:none;background:none;padding:2px 3px;font-family:'JetBrains Mono';font-size:11.5px;color:var(--ink-soft);cursor:pointer;text-align:left;border-radius:4px;}
+  .sub-due:hover{background:var(--paper);}
+  .sub-due.overdue{color:var(--coral);font-weight:700;}
   .inline-edit-input{font-size:13.5px;font-family:'Inter';border:1px solid var(--teal);border-radius:5px;padding:3px 5px;flex:1;min-width:0;}
   .inline-edit-date{font-size:11px;font-family:'JetBrains Mono';border:1px solid var(--teal);border-radius:5px;padding:2px 4px;flex:none;}
-  .row-menu-btn{flex:none;border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px;letter-spacing:1px;}
+  .row-menu-btn{flex:none;border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px;letter-spacing:1px;opacity:0;}
+  .table-row:hover .row-menu-btn{opacity:1;}
   .row-menu-btn:hover{background:var(--line);color:var(--ink);}
-  .empty-sub{color:var(--ink-soft);font-size:12px;padding:10px 6px;}
+  .empty-sub{color:var(--ink-soft);font-size:12px;padding:10px 16px;}
   .empty-state{color:var(--ink-soft);font-size:13px;text-align:center;padding:50px 10px;}
 
-  .quick-add-row{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
-  .quick-add-row input[type=text]{flex:1;min-width:0;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:13px;background:var(--paper);}
-  .quick-add-row input[type=date]{flex:none;width:132px;border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-size:12px;background:var(--paper);}
-  .quick-add-row input:focus{outline:none;border-color:var(--teal);}
-  .qa-submit{flex:none;border:none;background:var(--teal);color:white;border-radius:7px;padding:0 12px;font-size:12.5px;font-weight:700;cursor:pointer;height:32px;}
-  .qa-submit:hover{background:var(--teal-deep);}
-  .qa-detail{flex:none;border:1px solid var(--line);background:var(--paper-raised);border-radius:7px;width:32px;height:32px;font-size:14px;color:var(--ink-soft);cursor:pointer;}
-  .qa-detail:hover{color:var(--ink);}
+  .quick-add-link{padding:8px 16px 12px 54px;font-size:12.5px;color:var(--ink-soft);cursor:pointer;}
+  .quick-add-link:hover{color:var(--teal-deep);}
+  .qa-row input.qa-input{border:none;border-bottom:1.5px solid var(--teal);background:transparent;font-size:13.5px;font-family:'Inter';padding:4px 2px;min-width:0;}
+  .qa-row input.qa-input:focus{outline:none;}
+  .qa-row input.qa-date{border:none;border-bottom:1.5px solid var(--line);background:transparent;font-size:11px;font-family:'JetBrains Mono';padding:4px 2px;}
 
   /* ---- Calendar ---- */
   .cal-head{display:flex;align-items:center;justify-content:space-between;padding:0 4px 12px;}
@@ -205,7 +203,7 @@ let state = {
   members: null, taskGroups: null, subtasks: null, me: null,
   tab: (localStorage.getItem(LS_TAB) === 'calendar') ? 'calendar' : 'dashboard',
   filterMember: null, calMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-  modal: null, errorMsg: null,
+  modal: null, errorMsg: null, collapsedGroups: new Set(), activeQuickAdd: null,
 };
 let pendingFocusGroup = null; // 빠른입력 후 다시 포커스할 그룹 id
 
@@ -407,16 +405,6 @@ function allVisibleSubtasks(){
 
 /* ---------------- DASHBOARD ---------------- */
 function renderDashboard(){
-  const subs = allVisibleSubtasks();
-  const overdue = subs.filter(s=>s.status!=='done' && s.dueDate && s.dueDate < todayStr()).length;
-  const doing = subs.filter(s=>s.status==='doing').length;
-  const done = subs.filter(s=>s.status==='done').length;
-  const summary = `<div class="summary">
-    <div class="stat"><div class="n mono">${subs.length}</div><div class="l">전체 세부업무</div></div>
-    <div class="stat"><div class="n mono">${doing}</div><div class="l">진행중</div></div>
-    <div class="stat"><div class="n mono">${done}</div><div class="l">완료</div></div>
-    <div class="stat ${overdue>0?'warn':''}"><div class="n mono">${overdue}</div><div class="l">기한 초과</div></div>
-  </div>`;
   const addBtn = `<button class="add-task-btn" id="new-group-btn">＋ 새 업무 만들기</button>`;
 
   let groups = state.taskGroups;
@@ -426,28 +414,42 @@ function renderDashboard(){
   }
 
   if(groups.length===0){
-    return summary + addBtn + `<div class="empty-state">${state.filterMember?'이 팀원에게 배정된 업무가 없어요.':'아직 업무가 없어요. 위 버튼으로 첫 업무를 만들어보세요.'}</div>`;
+    return addBtn + `<div class="empty-state">${state.filterMember?'이 팀원에게 배정된 업무가 없어요.':'아직 업무가 없어요. 위 버튼으로 첫 업무를 만들어보세요.'}</div>`;
   }
 
-  const cards = groups.map(g=>{
+  const header = `<div class="table-header">
+    <div></div><div>내용</div><div>담당자</div><div>마감일</div><div></div>
+  </div>`;
+
+  const sections = groups.map(g=>{
+    const collapsed = state.collapsedGroups.has(g.id);
     const subs = subtasksOf(g.id);
-    const rows = subs.map(renderSubRow).join('') || `<div class="empty-sub">세부 업무가 없어요</div>`;
-    return `<div class="group-card" data-group="${g.id}">
-      <div class="group-head">
-        <div class="group-title">${escapeHtml(g.title)}</div>
-        <div class="group-actions"><button class="icon-btn danger" data-del-group="${g.id}">삭제</button></div>
+    const rows = collapsed ? '' : (subs.map(renderSubRow).join('') || `<div class="empty-sub">세부 업무가 없어요</div>`);
+    const quickAdd = collapsed ? '' : renderQuickAddRow(g.id);
+    return `<div class="group-section">
+      <div class="group-section-head" data-toggle-group="${g.id}">
+        <span class="collapse-tri ${collapsed?'collapsed':''}">▾</span>
+        <span class="group-title">${escapeHtml(g.title)}</span>
+        <button class="icon-btn danger" data-del-group="${g.id}">삭제</button>
       </div>
-      <div class="sub-list">${rows}</div>
-      <div class="quick-add-row">
-        <input type="text" data-qa-content="${g.id}" placeholder="할일 입력 후 Enter">
-        <input type="date" data-qa-due="${g.id}">
-        <button class="qa-submit" data-qa-submit="${g.id}">추가</button>
-        <button class="qa-detail" data-qa-detail="${g.id}" title="자세히 입력(담당자 등)">⋯</button>
-      </div>
+      ${rows}
+      ${quickAdd}
     </div>`;
   }).join('');
 
-  return summary + addBtn + `<div class="grouplist">${cards}</div>`;
+  return addBtn + `<div class="table-wrap">${header}${sections}</div>`;
+}
+function renderQuickAddRow(gid){
+  if(state.activeQuickAdd === gid){
+    return `<div class="table-row qa-row">
+      <div></div>
+      <input type="text" class="qa-input" data-qa-content="${gid}" placeholder="작업 이름 입력 후 Enter">
+      <div></div>
+      <input type="date" class="qa-date" data-qa-due="${gid}">
+      <div></div>
+    </div>`;
+  }
+  return `<div class="quick-add-link" data-qa-trigger="${gid}">＋ 작업 추가</div>`;
 }
 function renderAssigneeStack(ids){
   if(!ids || ids.length===0) return `<div class="assignee-stack"><div class="dot" style="background:#B7BEC7">?</div></div>`;
@@ -462,14 +464,14 @@ function renderAssigneeStack(ids){
 function renderSubRow(s){
   const overdue = s.status!=='done' && s.dueDate && s.dueDate < todayStr();
   const stLabel = STATUS.find(x=>x.k===s.status)?.l || '';
-  return `<div class="sub-row" data-sub-row="${s.id}">
+  return `<div class="table-row" data-sub-row="${s.id}">
     <button class="status-check ${s.status}" data-cycle="${s.id}" title="${stLabel} (클릭하면 다음 단계로)"></button>
     <div class="sub-content-wrap">
       <span class="sub-content-text ${s.status==='done'?'done':''}" data-edit-content="${s.id}">${escapeHtml(s.content)}</span>
       ${s.showNotes && s.notes ? `<span class="sub-note-inline">${escapeHtml(s.notes)}</span>` : ''}
     </div>
-    <button class="sub-due ${overdue?'overdue':''}" data-edit-due="${s.id}">${fmtDate(s.dueDate)}</button>
     ${renderAssigneeStack(s.assignees)}
+    <button class="sub-due ${overdue?'overdue':''}" data-edit-due="${s.id}">${fmtDate(s.dueDate)}</button>
     <button class="row-menu-btn" data-open-sub="${s.id}" title="자세히(담당자·상태·세부내용)">⋯</button>
   </div>`;
 }
@@ -726,20 +728,29 @@ function attachShellEvents(){
     cell.onclick = ()=> openDayModal(cell.dataset.openDay);
   });
 
-  // 빠른 추가 (할일 + 기한, Enter/버튼)
-  appRoot.querySelectorAll('[data-qa-submit]').forEach(btn=>{
-    btn.onclick = ()=> submitQuickAdd(btn.dataset.qaSubmit);
+  // 업무 제목 클릭 → 접기/펼치기
+  appRoot.querySelectorAll('[data-toggle-group]').forEach(head=>{
+    head.onclick = ()=>{
+      const gid = head.dataset.toggleGroup;
+      if(state.collapsedGroups.has(gid)) state.collapsedGroups.delete(gid);
+      else state.collapsedGroups.add(gid);
+      render();
+    };
+  });
+
+  // 빠른 추가: "+ 작업 추가" 클릭 → 그 자리에서 바로 입력
+  appRoot.querySelectorAll('[data-qa-trigger]').forEach(link=>{
+    link.onclick = ()=>{
+      state.activeQuickAdd = link.dataset.qaTrigger;
+      render();
+      const el = appRoot.querySelector(`[data-qa-content="${state.activeQuickAdd}"]`);
+      if(el) el.focus();
+    };
   });
   appRoot.querySelectorAll('[data-qa-content]').forEach(inp=>{
-    inp.onkeydown = (e)=>{ if(e.key==='Enter') submitQuickAdd(inp.dataset.qaContent); };
-  });
-  // 빠른 추가 옆 ⋯ → 담당자까지 지정해서 새로 만들기 (입력해둔 값 이어받음)
-  appRoot.querySelectorAll('[data-qa-detail]').forEach(btn=>{
-    btn.onclick = ()=>{
-      const gid = btn.dataset.qaDetail;
-      const contentEl = appRoot.querySelector(`[data-qa-content="${gid}"]`);
-      const dueEl = appRoot.querySelector(`[data-qa-due="${gid}"]`);
-      openSubModal('new', gid, null, {content: contentEl?contentEl.value.trim():'', dueDate: dueEl?dueEl.value:''});
+    inp.onkeydown = (e)=>{
+      if(e.key==='Enter') submitQuickAdd(inp.dataset.qaContent);
+      if(e.key==='Escape'){ state.activeQuickAdd = null; render(); }
     };
   });
 
