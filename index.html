@@ -52,42 +52,43 @@
 
   /* ---- Task table (아사나 스타일) ---- */
   .table-wrap{background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-pin);}
-  .table-header{display:grid;grid-template-columns:28px 1fr 100px 92px 24px;gap:10px;align-items:center;padding:9px 16px;font-size:10.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;background:var(--paper);border-bottom:1px solid var(--line);}
-  .group-section-head{display:flex;align-items:center;gap:8px;padding:10px 16px;cursor:pointer;background:#F5F6F8;border-bottom:1px solid var(--line);border-top:1px solid var(--line);}
+  .table-header{display:grid;grid-template-columns:30px 1fr 84px 84px 150px 24px;gap:12px;align-items:center;padding:11px 16px;font-size:11.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;background:var(--paper);border-bottom:1px solid var(--line);}
+  .group-section-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;background:#F5F6F8;border-bottom:1px solid var(--line);border-top:1px solid var(--line);}
   .group-section:first-child .group-section-head{border-top:none;}
   .group-section-head:hover{background:#EFF1F3;}
-  .collapse-tri{font-size:9px;color:var(--ink-soft);display:inline-block;transition:transform .15s;width:10px;}
+  .group-section-head.drag-over{outline:2px dashed var(--teal);outline-offset:-2px;background:#E7F3F1;}
+  .group-section-head[draggable]{cursor:grab;}
+  .collapse-tri{font-size:16px;color:var(--ink-soft);display:inline-block;transition:transform .15s;width:16px;line-height:1;}
   .collapse-tri.collapsed{transform:rotate(-90deg);}
-  .group-title{font-family:'Space Grotesk';font-weight:700;font-size:14px;flex:1;}
+  .group-title{font-family:'Space Grotesk';font-weight:700;font-size:15px;flex:1;user-select:none;}
   .icon-btn{border:1px solid var(--line);background:var(--paper-raised);border-radius:7px;padding:4px 9px;font-size:11.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;flex:none;}
   .icon-btn:hover{color:var(--ink);}
   .icon-btn.danger:hover{color:var(--coral);border-color:var(--coral);}
 
-  .table-row{display:grid;grid-template-columns:28px 1fr 100px 92px 24px;gap:10px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--paper);}
+  .table-row{display:grid;grid-template-columns:30px 1fr 84px 84px 150px 24px;gap:12px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--paper);}
   .table-row:hover{background:#FAFBFC;}
-  .status-check{flex:none;width:19px;height:19px;border-radius:50%;border:1.5px solid var(--line);background:var(--paper-raised);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:11px;font-weight:900;color:transparent;line-height:1;}
+  .status-check{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);background:var(--paper-raised);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:12.5px;font-weight:900;color:var(--line);line-height:1;}
+  .status-check::after{content:'✓';}
   .status-check.done{border-color:var(--teal);background:var(--teal);color:white;}
-  .status-check.done::after{content:'✓';}
-  .sub-content-wrap{min-width:0;display:flex;align-items:baseline;gap:8px;overflow:hidden;white-space:nowrap;}
-  .sub-content-text{flex:none;font-size:13.5px;cursor:text;padding:3px 5px;border-radius:5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
+  .sub-content-text{font-size:15px;cursor:text;padding:4px 6px;border-radius:5px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;}
   .sub-content-text:hover{background:#fff;box-shadow:0 0 0 1px var(--line) inset;}
   .sub-content-text.done{color:var(--ink-soft);text-decoration:line-through;}
-  .sub-note-inline{flex:1;min-width:0;font-size:11.5px;color:#9AA3AF;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sub-remark{font-size:12.5px;color:#9AA3AF;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .assignee-stack{display:flex;align-items:center;flex:none;}
-  .assignee-stack .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--paper-raised);margin-left:-6px;display:flex;align-items:center;justify-content:center;color:white;font-size:9px;font-weight:700;}
+  .assignee-stack .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--paper-raised);margin-left:-7px;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;}
   .assignee-stack .dot:first-child{margin-left:0;}
-  .sub-due{flex:none;border:none;background:none;padding:2px 3px;font-family:'JetBrains Mono';font-size:11.5px;color:var(--ink-soft);cursor:pointer;text-align:left;border-radius:4px;}
+  .sub-due{flex:none;border:none;background:none;padding:3px 4px;font-family:'JetBrains Mono';font-size:12.5px;color:var(--ink-soft);cursor:pointer;text-align:left;border-radius:4px;}
   .sub-due:hover{background:var(--paper);}
   .sub-due.overdue{color:var(--coral);font-weight:700;}
-  .inline-edit-input{font-size:13.5px;font-family:'Inter';border:1px solid var(--teal);border-radius:5px;padding:3px 5px;flex:1;min-width:0;}
-  .inline-edit-date{font-size:11px;font-family:'JetBrains Mono';border:1px solid var(--teal);border-radius:5px;padding:2px 4px;flex:none;}
-  .row-menu-btn{flex:none;border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px;letter-spacing:1px;opacity:0;}
+  .inline-edit-input{font-size:15px;font-family:'Inter';border:1px solid var(--teal);border-radius:5px;padding:3px 5px;width:100%;min-width:0;}
+  .inline-edit-date{font-size:12px;font-family:'JetBrains Mono';border:1px solid var(--teal);border-radius:5px;padding:2px 4px;flex:none;}
+  .row-menu-btn{flex:none;border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:6px;letter-spacing:1px;opacity:0;}
   .table-row:hover .row-menu-btn{opacity:1;}
   .row-menu-btn:hover{background:var(--line);color:var(--ink);}
-  .empty-sub{color:var(--ink-soft);font-size:12px;padding:10px 16px;}
+  .empty-sub{color:var(--ink-soft);font-size:12.5px;padding:12px 16px;}
   .empty-state{color:var(--ink-soft);font-size:13px;text-align:center;padding:50px 10px;}
 
-  .quick-add-link{padding:8px 16px 12px 54px;font-size:12.5px;color:var(--ink-soft);cursor:pointer;}
+  .quick-add-link{padding:9px 16px 13px 58px;font-size:13px;color:var(--ink-soft);cursor:pointer;}
   .quick-add-link:hover{color:var(--teal-deep);}
   .qa-row input.qa-input{border:none;border-bottom:1.5px solid var(--teal);background:transparent;font-size:13.5px;font-family:'Inter';padding:4px 2px;min-width:0;}
   .qa-row input.qa-input:focus{outline:none;}
@@ -206,6 +207,7 @@ let state = {
   modal: null, errorMsg: null, collapsedGroups: new Set(), activeQuickAdd: null,
 };
 let pendingFocusGroup = null; // 빠른입력 후 다시 포커스할 그룹 id
+let draggedGroupId = null; // 업무 순서 드래그 중인 id
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function fmtDate(s){ if(!s) return '기한 없음'; const d=new Date(s+'T00:00:00'); return (d.getMonth()+1)+'/'+d.getDate(); }
@@ -224,7 +226,13 @@ async function loadAll(){
     ]);
     if(e1) throw e1; if(e2) throw e2; if(e3) throw e3;
     state.members = members;
-    state.taskGroups = groups.map(g=>({id:g.id, title:g.title}));
+    state.taskGroups = groups
+      .map(g=>({id:g.id, title:g.title, sortOrder:g.sort_order}))
+      .sort((a,b)=>{
+        const ao = a.sortOrder==null ? 999999 : a.sortOrder;
+        const bo = b.sortOrder==null ? 999999 : b.sortOrder;
+        return ao - bo;
+      });
     state.subtasks = subs.map(s=>({
       id:s.id, taskGroupId:s.task_group_id, content:s.content, dueDate:s.due_date,
       status:s.status, assignees:s.assignees||[], notes:s.notes||'', showNotes:!!s.show_notes
@@ -261,6 +269,18 @@ async function deleteTaskGroup(id){
   if(!confirm('이 업무와 안의 모든 세부 업무가 삭제돼요. 계속할까요?')) return;
   const {error} = await sb.from('task_groups').delete().eq('id', id);
   if(error){ alert('삭제 실패: '+error.message); return; }
+  await loadAll();
+}
+async function reorderGroups(draggedId, targetId){
+  const ids = state.taskGroups.map(g=>g.id);
+  const fromIdx = ids.indexOf(draggedId), toIdx = ids.indexOf(targetId);
+  if(fromIdx===-1 || toIdx===-1 || fromIdx===toIdx) return;
+  ids.splice(toIdx, 0, ids.splice(fromIdx,1)[0]);
+  try{
+    const results = await Promise.all(ids.map((id,i)=> sb.from('task_groups').update({sort_order:i}).eq('id', id)));
+    const failed = results.find(r=>r.error);
+    if(failed) throw failed.error;
+  }catch(err){ alert('순서 변경 실패: '+(err.message||err)); }
   await loadAll();
 }
 async function upsertSubtask(sub, isNew){
@@ -418,7 +438,7 @@ function renderDashboard(){
   }
 
   const header = `<div class="table-header">
-    <div></div><div>내용</div><div>담당자</div><div>마감일</div><div></div>
+    <div></div><div>내용</div><div>담당자</div><div>마감일</div><div>비고</div><div></div>
   </div>`;
 
   const sections = groups.map(g=>{
@@ -427,7 +447,7 @@ function renderDashboard(){
     const rows = collapsed ? '' : (subs.map(renderSubRow).join('') || `<div class="empty-sub">세부 업무가 없어요</div>`);
     const quickAdd = collapsed ? '' : renderQuickAddRow(g.id);
     return `<div class="group-section">
-      <div class="group-section-head" data-toggle-group="${g.id}">
+      <div class="group-section-head" data-toggle-group="${g.id}" data-drag-group="${g.id}" draggable="true">
         <span class="collapse-tri ${collapsed?'collapsed':''}">▾</span>
         <span class="group-title">${escapeHtml(g.title)}</span>
         <button class="icon-btn danger" data-del-group="${g.id}">삭제</button>
@@ -446,6 +466,7 @@ function renderQuickAddRow(gid){
       <input type="text" class="qa-input" data-qa-content="${gid}" placeholder="작업 이름 입력 후 Enter">
       <div></div>
       <input type="date" class="qa-date" data-qa-due="${gid}">
+      <div></div>
       <div></div>
     </div>`;
   }
@@ -466,12 +487,10 @@ function renderSubRow(s){
   const stLabel = STATUS.find(x=>x.k===s.status)?.l || '';
   return `<div class="table-row" data-sub-row="${s.id}">
     <button class="status-check ${s.status}" data-cycle="${s.id}" title="${stLabel} (클릭하면 다음 단계로)"></button>
-    <div class="sub-content-wrap">
-      <span class="sub-content-text ${s.status==='done'?'done':''}" data-edit-content="${s.id}">${escapeHtml(s.content)}</span>
-      ${s.showNotes && s.notes ? `<span class="sub-note-inline">${escapeHtml(s.notes)}</span>` : ''}
-    </div>
+    <span class="sub-content-text ${s.status==='done'?'done':''}" data-edit-content="${s.id}">${escapeHtml(s.content)}</span>
     ${renderAssigneeStack(s.assignees)}
     <button class="sub-due ${overdue?'overdue':''}" data-edit-due="${s.id}">${fmtDate(s.dueDate)}</button>
+    <div class="sub-remark" title="${s.showNotes?escapeAttr(s.notes||''):''}">${s.showNotes && s.notes ? escapeHtml(s.notes) : ''}</div>
     <button class="row-menu-btn" data-open-sub="${s.id}" title="자세히(담당자·상태·세부내용)">⋯</button>
   </div>`;
 }
@@ -736,6 +755,19 @@ function attachShellEvents(){
       else state.collapsedGroups.add(gid);
       render();
     };
+  });
+
+  // 업무 제목 드래그 → 다른 업무와 순서 바꾸기
+  appRoot.querySelectorAll('[data-drag-group]').forEach(head=>{
+    head.addEventListener('dragstart', (e)=>{ draggedGroupId = head.dataset.dragGroup; e.dataTransfer.effectAllowed = 'move'; });
+    head.addEventListener('dragover', (e)=>{ e.preventDefault(); head.classList.add('drag-over'); });
+    head.addEventListener('dragleave', ()=>{ head.classList.remove('drag-over'); });
+    head.addEventListener('drop', (e)=>{
+      e.preventDefault(); head.classList.remove('drag-over');
+      const targetId = head.dataset.dragGroup;
+      if(draggedGroupId && draggedGroupId!==targetId) reorderGroups(draggedGroupId, targetId);
+      draggedGroupId = null;
+    });
   });
 
   // 빠른 추가: "+ 작업 추가" 클릭 → 그 자리에서 바로 입력
