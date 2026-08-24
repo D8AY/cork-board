@@ -66,6 +66,8 @@
   .icon-btn.danger:hover{color:var(--coral);border-color:var(--coral);}
 
   .table-row{display:grid;grid-template-columns:30px 1fr 84px 84px 150px 24px;gap:12px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--paper);}
+  .table-row[draggable="true"]{cursor:grab;}
+  .table-row.drag-over{outline:2px dashed var(--teal);outline-offset:-2px;background:#E7F3F1;}
   .table-row:hover{background:#FAFBFC;}
   .status-check{flex:none;width:17px;height:17px;border-radius:50%;border:1.5px solid var(--line);background:var(--paper-raised);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:10px;font-weight:900;color:var(--line);line-height:1;}
   .status-check::after{content:'✓';}
@@ -168,6 +170,12 @@
   .setup-card ol{font-size:13.5px;line-height:1.8;padding-left:20px;}
   .setup-card code{background:var(--paper);padding:2px 6px;border-radius:5px;font-family:'JetBrains Mono';font-size:12px;}
   .err-note{background:#FBE4DC;color:var(--coral);padding:10px 12px;border-radius:8px;font-size:12.5px;margin-top:14px;}
+  .ics-section-title{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 6px;}
+  .ics-section-title:first-child{margin-top:0;}
+  .ics-link-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--paper);}
+  .ics-link-row .ics-name{flex:1;font-size:13px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .ics-link-row button{flex:none;border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:4px 10px;font-size:11.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;}
+  .ics-link-row button:hover{color:var(--ink);}
 </style>
 </head>
 <body>
@@ -179,6 +187,9 @@
    ========================================================= */
 const SUPABASE_URL = 'https://wcljzyocvohahayqnywl.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjbGp6eW9jdm9oYWhheXFueXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MzgyNjQsImV4cCI6MjEwMzExNDI2NH0.ryTtkhzsOSWkW0f9e9xR4-fErifZ1G-OKDOvG6wRG3A';
+// 구글 캘린더 구독용 ICS 피드 주소 (Edge Function 배포 후 채워주세요)
+// 예: https://wcljzyocvohahayqnywl.supabase.co/functions/v1/ics-feed
+const ICS_FEED_URL = 'https://wcljzyocvohahayqnywl.supabase.co/functions/v1/ics-feed';
 /* ========================================================= */
 
 const PALETTE = ['#2A9D8F','#E76F51','#8E7DBE','#4C93B0','#D46A9F','#7C9070','#E9B949','#6B7B8C'];
@@ -208,6 +219,7 @@ let state = {
 };
 let pendingFocusGroup = null; // 빠른입력 후 다시 포커스할 그룹 id
 let draggedGroupId = null; // 업무 순서 드래그 중인 id
+let draggedSubId = null; // 세부업무 순서 드래그 중인 id
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function fmtDate(s){ if(!s) return '기한 없음'; const d=new Date(s+'T00:00:00'); return (d.getMonth()+1)+'/'+d.getDate(); }
@@ -235,7 +247,8 @@ async function loadAll(){
       });
     state.subtasks = subs.map(s=>({
       id:s.id, taskGroupId:s.task_group_id, content:s.content, dueDate:s.due_date,
-      status:s.status, assignees:s.assignees||[], notes:s.notes||'', showNotes:!!s.show_notes
+      status:s.status, assignees:s.assignees||[], notes:s.notes||'', showNotes:!!s.show_notes,
+      inCalendar: s.in_calendar !== false, sortOrder: s.sort_order
     }));
     state.errorMsg = null;
   }catch(err){ state.errorMsg = (err && err.message) ? err.message : String(err); }
@@ -283,10 +296,28 @@ async function reorderGroups(draggedId, targetId){
   }catch(err){ alert('순서 변경 실패: '+(err.message||err)); }
   await loadAll();
 }
+async function updateTaskGroupTitle(id, title){
+  const {error} = await sb.from('task_groups').update({title}).eq('id', id);
+  if(error){ alert('업무 제목 저장 실패: '+error.message); return; }
+  await loadAll();
+}
+async function reorderSubtasks(draggedId, targetId, groupId){
+  const ids = subtasksOf(groupId).map(s=>s.id);
+  const fromIdx = ids.indexOf(draggedId), toIdx = ids.indexOf(targetId);
+  if(fromIdx===-1 || toIdx===-1 || fromIdx===toIdx) return;
+  ids.splice(toIdx, 0, ids.splice(fromIdx,1)[0]);
+  try{
+    const results = await Promise.all(ids.map((id,i)=> sb.from('subtasks').update({sort_order:i}).eq('id', id)));
+    const failed = results.find(r=>r.error);
+    if(failed) throw failed.error;
+  }catch(err){ alert('순서 변경 실패: '+(err.message||err)); }
+  await loadAll();
+}
 async function upsertSubtask(sub, isNew){
   const row = {
     task_group_id: sub.taskGroupId, content: sub.content, due_date: sub.dueDate || null,
     status: sub.status, assignees: sub.assignees || [], notes: sub.notes || '', show_notes: !!sub.showNotes,
+    in_calendar: sub.inCalendar === undefined ? true : !!sub.inCalendar,
   };
   let error;
   if(isNew){ ({error} = await sb.from('subtasks').insert(row)); }
@@ -394,7 +425,7 @@ function renderShell(){
     <header class="topbar">
       <div class="brand"><div class="brand-mark display">C</div><div class="brand-text"><div class="title">Cork</div><div class="sub">우리 팀의 코르크보드</div></div></div>
       <nav class="tabs"><button data-tab="dashboard" class="${state.tab==='dashboard'?'active':''}">대시보드</button><button data-tab="calendar" class="${state.tab==='calendar'?'active':''}">캘린더</button></nav>
-      <div class="whoami"><span>안녕하세요, <b>${escapeHtml(me?me.name:'')}</b>님</span><button id="switch-me">전환</button></div>
+      <div class="whoami"><span>안녕하세요, <b>${escapeHtml(me?me.name:'')}</b>님</span><button id="ics-links-btn">📅 구독 링크</button><button id="switch-me">전환</button></div>
     </header>
     <div class="roster" id="roster">${renderRosterChips()}<span class="chip add" id="add-member-chip">+ 팀원</span></div>
     ${state.tab==='dashboard' ? renderDashboard() : renderCalendar()}
@@ -412,8 +443,9 @@ function subtasksOf(groupId){
   let list = state.subtasks.filter(s=>s.taskGroupId===groupId);
   if(state.filterMember) list = list.filter(s=>(s.assignees||[]).includes(state.filterMember));
   return list.sort((a,b)=>{
-    const r = STATUS_RANK[a.status]-STATUS_RANK[b.status];
-    if(r!==0) return r;
+    const ao = a.sortOrder==null ? 999999 : a.sortOrder;
+    const bo = b.sortOrder==null ? 999999 : b.sortOrder;
+    if(ao!==bo) return ao-bo;
     return (a.dueDate||'9999') < (b.dueDate||'9999') ? -1 : 1;
   });
 }
@@ -449,7 +481,7 @@ function renderDashboard(){
     return `<div class="group-section">
       <div class="group-section-head" data-toggle-group="${g.id}" data-drag-group="${g.id}" draggable="true">
         <span class="collapse-tri ${collapsed?'collapsed':''}">▾</span>
-        <span class="group-title">${escapeHtml(g.title)}</span>
+        <span class="group-title" data-edit-group-title="${g.id}">${escapeHtml(g.title)}</span>
         <button class="icon-btn danger" data-del-group="${g.id}">삭제</button>
       </div>
       ${rows}
@@ -485,7 +517,7 @@ function renderAssigneeStack(ids){
 function renderSubRow(s){
   const overdue = s.status!=='done' && s.dueDate && s.dueDate < todayStr();
   const stLabel = STATUS.find(x=>x.k===s.status)?.l || '';
-  return `<div class="table-row" data-sub-row="${s.id}">
+  return `<div class="table-row" data-sub-row="${s.id}" draggable="true">
     <button class="status-check ${s.status}" data-cycle="${s.id}" title="${stLabel} (클릭하면 다음 단계로)"></button>
     <span class="sub-content-text ${s.status==='done'?'done':''}" data-edit-content="${s.id}">${escapeHtml(s.content)}</span>
     ${renderAssigneeStack(s.assignees)}
@@ -530,6 +562,7 @@ function renderCalendar(){
 function openGroupModal(){ state.modal = {type:'group'}; renderModal(); }
 function openSubModal(mode, taskGroupId, subId, prefill){ state.modal = {type:'sub', mode, taskGroupId, subId, prefill}; renderModal(); }
 function openDayModal(date){ state.modal = {type:'day', date}; renderModal(); }
+function openIcsModal(){ state.modal = {type:'ics'}; renderModal(); }
 function closeModal(){ state.modal = null; const ov=document.getElementById('modal-overlay'); if(ov) ov.remove(); }
 
 function renderModal(){
@@ -538,6 +571,7 @@ function renderModal(){
   const m = state.modal;
   if(m.type==='group') return renderGroupModal();
   if(m.type==='day') return renderDayModal();
+  if(m.type==='ics') return renderIcsModal();
   return renderSubModal();
 }
 function renderDayModal(){
@@ -583,6 +617,52 @@ function renderDayModal(){
     });
   });
 }
+function renderIcsModal(){
+  const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='modal-overlay';
+  const notReady = ICS_FEED_URL.includes('YOUR_ICS_FEED_URL');
+
+  let body;
+  if(notReady){
+    body = `<p style="font-size:13px;color:var(--ink-soft);line-height:1.6">
+      아직 구글 캘린더 구독 주소가 설정되지 않았어요. Edge Function(ics-feed) 배포 후,
+      코드 상단 <code>ICS_FEED_URL</code> 값을 채워주세요.
+    </p>`;
+  }else{
+    const rows = (label, url)=> `<div class="ics-link-row"><span class="ics-name">${escapeHtml(label)}</span><button data-copy-url="${escapeAttr(url)}">복사</button></div>`;
+    const memberRows = state.members.map(m=> rows(m.name, `${ICS_FEED_URL}?member=${encodeURIComponent(m.id)}`)).join('');
+    const groupRows = state.taskGroups.map(g=> rows(g.title, `${ICS_FEED_URL}?group=${encodeURIComponent(g.id)}`)).join('');
+    body = `
+      <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 4px">
+        복사한 주소를 구글 캘린더 → 다른 캘린더 추가 → "URL로 만들기"에 붙여넣으면 구독돼요.
+        캘린더에서 빼고 싶은 세부업무는 자세히 보기에서 "구글 캘린더에 포함" 체크를 꺼주세요.
+      </p>
+      <div class="ics-section-title">전체 팀</div>
+      ${rows('전체 세부업무', ICS_FEED_URL)}
+      <div class="ics-section-title">팀원별</div>
+      ${memberRows || '<div style="font-size:12px;color:var(--ink-soft)">팀원이 없어요</div>'}
+      <div class="ics-section-title">업무별</div>
+      ${groupRows || '<div style="font-size:12px;color:var(--ink-soft)">업무가 없어요</div>'}
+    `;
+  }
+
+  overlay.innerHTML = `<div class="modal">
+    <h3>📅 캘린더 구독 링크</h3>
+    ${body}
+    <div class="modal-actions"><div></div><div><button class="btn primary small" id="cancel-modal">닫기</button></div></div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',(e)=>{ if(e.target===overlay) closeModal(); });
+  document.getElementById('cancel-modal').onclick = closeModal;
+  overlay.querySelectorAll('[data-copy-url]').forEach(btn=>{
+    btn.onclick = async ()=>{
+      try{
+        await navigator.clipboard.writeText(btn.dataset.copyUrl);
+        const orig = btn.textContent; btn.textContent = '복사됨!';
+        setTimeout(()=>{ btn.textContent = orig; }, 1500);
+      }catch(e){ alert('복사에 실패했어요. 주소를 직접 선택해 복사해주세요:\\n'+btn.dataset.copyUrl); }
+    };
+  });
+}
 function renderGroupModal(){
   const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='modal-overlay';
   overlay.innerHTML = `<div class="modal"><h3>새 업무</h3>
@@ -606,7 +686,7 @@ function renderSubModal(){
   const existing = isNew ? null : state.subtasks.find(x=>x.id===m.subId);
   const group = state.taskGroups.find(g=>g.id===m.taskGroupId);
   const pf = m.prefill || {};
-  const s = isNew ? {content:pf.content||'', dueDate:pf.dueDate||'', status:'todo', assignees: state.me?[state.me]:[], notes:'', showNotes:false} : existing;
+  const s = isNew ? {content:pf.content||'', dueDate:pf.dueDate||'', status:'todo', assignees: state.me?[state.me]:[], notes:'', showNotes:false, inCalendar:true} : existing;
   let selected = new Set(s.assignees||[]);
 
   const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='modal-overlay';
@@ -616,6 +696,9 @@ function renderSubModal(){
     <div class="row2">
       <div class="field"><label>기한</label><input type="date" id="s-due" value="${s.dueDate||''}"></div>
       <div class="field"><label>상태</label><select id="s-status">${STATUS.map(x=>`<option value="${x.k}" ${x.k===s.status?'selected':''}>${x.l}</option>`).join('')}</select></div>
+    </div>
+    <div class="field">
+      <label class="notes-toggle"><input type="checkbox" id="s-incalendar" ${s.inCalendar!==false?'checked':''}>구글 캘린더에 포함</label>
     </div>
     <div class="field">
       <div class="field-head-row">
@@ -655,6 +738,7 @@ function renderSubModal(){
       assignees: Array.from(selected),
       notes: document.getElementById('s-notes').value,
       showNotes: document.getElementById('s-shownotes').checked,
+      inCalendar: document.getElementById('s-incalendar').checked,
     };
     state.modal = null; // 저장 중 재렌더로 모달이 중복 생성되지 않도록 먼저 비움
     const ok = await upsertSubtask(payload, isNew);
@@ -665,6 +749,27 @@ function renderSubModal(){
 }
 
 /* ---------------- INLINE EDIT HELPERS ---------------- */
+function startInlineGroupTitleEdit(span, g){
+  const input = document.createElement('input');
+  input.type = 'text'; input.className = 'inline-edit-input'; input.value = g.title;
+  input.draggable = false;
+  input.style.fontFamily = "'Space Grotesk',sans-serif"; input.style.fontWeight = '700';
+  span.replaceWith(input); input.focus(); input.select();
+  let done = false;
+  const commit = async ()=>{
+    if(done) return; done = true;
+    const val = input.value.trim();
+    if(val && val !== g.title){ await updateTaskGroupTitle(g.id, val); }
+    else{ render(); }
+  };
+  input.addEventListener('mousedown', e=>e.stopPropagation());
+  input.addEventListener('click', e=>e.stopPropagation());
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter') input.blur();
+    if(e.key==='Escape'){ done = true; render(); }
+  });
+}
 function startInlineContentEdit(row, sub){
   const span = row.querySelector(`[data-edit-content="${sub.id}"]`);
   if(!span) return;
@@ -704,6 +809,7 @@ function attachShellEvents(){
   const appRoot = document.getElementById('app'); // 모달(overlay)은 body 직속이라 여기 범위에 안 들어옴 → 이벤트 중복 바인딩 방지
   appRoot.querySelectorAll('nav.tabs [data-tab]').forEach(b=>{ b.onclick=()=>{ state.tab=b.dataset.tab; localStorage.setItem(LS_TAB, state.tab); render(); }; });
   document.getElementById('switch-me').onclick=()=>{ state.me=null; localStorage.removeItem(LS_ME); render(); };
+  document.getElementById('ics-links-btn').onclick = openIcsModal;
   document.getElementById('add-member-chip').onclick=()=>{ document.getElementById('app').innerHTML=renderOnboarding(); attachOnboardEvents(); const d=document.getElementById('ob-done'); d.textContent='← 돌아가기'; d.onclick=()=>render(); };
   appRoot.querySelectorAll('#roster [data-filter]').forEach(c=>{ c.onclick=()=>{ const f=c.dataset.filter; state.filterMember=(f==='__all__')?null:(state.filterMember===f?null:f); render(); }; });
 
@@ -757,6 +863,16 @@ function attachShellEvents(){
     };
   });
 
+  // 업무 제목 텍스트 클릭 → 인라인 수정 (접기/펼치기 토글과 분리)
+  appRoot.querySelectorAll('[data-edit-group-title]').forEach(span=>{
+    span.onclick = (e)=>{
+      e.stopPropagation();
+      const gid = span.dataset.editGroupTitle;
+      const g = state.taskGroups.find(x=>x.id===gid);
+      if(g) startInlineGroupTitleEdit(span, g);
+    };
+  });
+
   // 업무 제목 드래그 → 다른 업무와 순서 바꾸기
   appRoot.querySelectorAll('[data-drag-group]').forEach(head=>{
     head.addEventListener('dragstart', (e)=>{ draggedGroupId = head.dataset.dragGroup; e.dataTransfer.effectAllowed = 'move'; });
@@ -767,6 +883,25 @@ function attachShellEvents(){
       const targetId = head.dataset.dragGroup;
       if(draggedGroupId && draggedGroupId!==targetId) reorderGroups(draggedGroupId, targetId);
       draggedGroupId = null;
+    });
+  });
+
+  // 세부업무 드래그 → 같은 업무 안에서 순서 바꾸기
+  appRoot.querySelectorAll('[data-sub-row]').forEach(row=>{
+    row.addEventListener('dragstart', (e)=>{ draggedSubId = row.dataset.subRow; e.dataTransfer.effectAllowed = 'move'; });
+    row.addEventListener('dragover', (e)=>{ e.preventDefault(); row.classList.add('drag-over'); });
+    row.addEventListener('dragleave', ()=>{ row.classList.remove('drag-over'); });
+    row.addEventListener('drop', (e)=>{
+      e.preventDefault(); row.classList.remove('drag-over');
+      const targetId = row.dataset.subRow;
+      if(draggedSubId && draggedSubId!==targetId){
+        const draggedSub = state.subtasks.find(x=>x.id===draggedSubId);
+        const targetSub = state.subtasks.find(x=>x.id===targetId);
+        if(draggedSub && targetSub && draggedSub.taskGroupId===targetSub.taskGroupId){
+          reorderSubtasks(draggedSubId, targetId, draggedSub.taskGroupId);
+        }
+      }
+      draggedSubId = null;
     });
   });
 
