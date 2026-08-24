@@ -59,24 +59,37 @@
   .icon-btn:hover{color:var(--ink);}
   .icon-btn.danger:hover{color:var(--coral);border-color:var(--coral);}
 
-  .sub-row{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;cursor:pointer;border-bottom:1px solid var(--paper);}
+  .sub-row{display:flex;align-items:center;gap:8px;padding:8px 6px;border-radius:8px;border-bottom:1px solid var(--paper);}
   .sub-row:last-child{border-bottom:none;}
   .sub-row:hover{background:var(--paper);}
   .status-pill{flex:none;border:none;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter';}
   .status-pill.todo{background:#E7E9EC;color:var(--ink-soft);}
   .status-pill.doing{background:#FCF1D8;color:#A87A15;}
   .status-pill.done{background:#DDEFEA;color:var(--teal-deep);}
-  .sub-content{flex:1;font-size:13.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .sub-content.done{color:var(--ink-soft);text-decoration:line-through;}
+  .sub-content-text{flex:1;font-size:13.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:text;padding:3px 5px;border-radius:5px;}
+  .sub-content-text:hover{background:#fff;box-shadow:0 0 0 1px var(--line) inset;}
+  .sub-content-text.done{color:var(--ink-soft);text-decoration:line-through;}
   .assignee-stack{display:flex;align-items:center;flex:none;}
   .assignee-stack .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--paper-raised);margin-left:-6px;display:flex;align-items:center;justify-content:center;color:white;font-size:9px;font-weight:700;}
   .assignee-stack .dot:first-child{margin-left:0;}
-  .sub-due{flex:none;font-family:'JetBrains Mono';font-size:10.5px;padding:2px 7px;border-radius:6px;background:var(--paper);color:var(--ink-soft);}
+  .sub-due{flex:none;font-family:'JetBrains Mono';font-size:10.5px;padding:3px 7px;border-radius:6px;background:var(--paper);color:var(--ink-soft);cursor:pointer;border:none;}
+  .sub-due:hover{box-shadow:0 0 0 1px var(--line) inset;}
   .sub-due.overdue{background:#FBE4DC;color:var(--coral);}
+  .inline-edit-input{font-size:13.5px;font-family:'Inter';border:1px solid var(--teal);border-radius:5px;padding:3px 5px;flex:1;min-width:0;}
+  .inline-edit-date{font-size:11px;font-family:'JetBrains Mono';border:1px solid var(--teal);border-radius:5px;padding:2px 4px;flex:none;}
+  .row-menu-btn{flex:none;border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px;letter-spacing:1px;}
+  .row-menu-btn:hover{background:var(--line);color:var(--ink);}
   .empty-sub{color:var(--ink-soft);font-size:12px;padding:10px 6px;}
-  .add-sub-btn{margin-top:6px;background:none;border:1px dashed var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;color:var(--ink-soft);cursor:pointer;width:100%;text-align:left;}
-  .add-sub-btn:hover{border-color:var(--teal);color:var(--teal-deep);}
   .empty-state{color:var(--ink-soft);font-size:13px;text-align:center;padding:50px 10px;}
+
+  .quick-add-row{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
+  .quick-add-row input[type=text]{flex:1;min-width:0;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:13px;background:var(--paper);}
+  .quick-add-row input[type=date]{flex:none;width:132px;border:1px solid var(--line);border-radius:7px;padding:7px 8px;font-size:12px;background:var(--paper);}
+  .quick-add-row input:focus{outline:none;border-color:var(--teal);}
+  .qa-submit{flex:none;border:none;background:var(--teal);color:white;border-radius:7px;padding:0 12px;font-size:12.5px;font-weight:700;cursor:pointer;height:32px;}
+  .qa-submit:hover{background:var(--teal-deep);}
+  .qa-detail{flex:none;border:1px solid var(--line);background:var(--paper-raised);border-radius:7px;width:32px;height:32px;font-size:14px;color:var(--ink-soft);cursor:pointer;}
+  .qa-detail:hover{color:var(--ink);}
 
   /* ---- Calendar ---- */
   .cal-head{display:flex;align-items:center;justify-content:space-between;padding:0 4px 12px;}
@@ -91,6 +104,21 @@
   .cal-daynum{font-family:'JetBrains Mono';font-size:11px;color:var(--ink-soft);}
   .cal-chip{font-size:10.5px;padding:2px 5px;border-radius:5px;color:white;font-weight:600;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .cal-more{font-size:10px;color:var(--ink-soft);}
+  .cal-cell{cursor:pointer;}
+  .cal-cell:hover{border-color:var(--teal);}
+
+  .modal-day{background:var(--paper-raised);border-radius:16px;max-width:720px;width:95%;max-height:88vh;overflow-y:auto;padding:26px 26px 22px;box-shadow:0 25px 70px -25px rgba(0,0,0,.45);}
+  .day-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;}
+  .day-header .d-title{font-family:'Space Grotesk';font-size:22px;font-weight:700;}
+  .day-header .d-count{font-size:12.5px;color:var(--ink-soft);}
+  .day-close{border:1px solid var(--line);background:var(--paper);border-radius:8px;width:32px;height:32px;font-size:16px;color:var(--ink-soft);cursor:pointer;flex:none;}
+  .day-item{display:flex;align-items:center;gap:10px;padding:12px 8px;border-radius:10px;cursor:pointer;border-bottom:1px solid var(--paper);}
+  .day-item:hover{background:var(--paper);}
+  .day-item:last-child{border-bottom:none;}
+  .day-item .di-group{flex:none;width:150px;font-size:11.5px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .day-item .di-content{flex:1;font-size:14.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .day-item .di-content.done{color:var(--ink-soft);text-decoration:line-through;}
+  .day-empty{color:var(--ink-soft);font-size:13.5px;text-align:center;padding:60px 10px;}
 
   /* ---- Modal ---- */
   .overlay{position:fixed;inset:0;background:rgba(31,41,55,.4);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;}
@@ -152,16 +180,11 @@ let sb = null;
 if(!needsSetup){ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
 
 let state = {
-  members: null,        // [{id,name,color}]
-  taskGroups: null,      // [{id,title}]
-  subtasks: null,        // [{id,taskGroupId,content,dueDate,status,assignees:[id,...]}]
-  me: null,
-  tab: 'dashboard',
-  filterMember: null,
-  calMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-  modal: null,            // {type:'group'|'sub', mode:'new'|'edit', id, taskGroupId}
-  errorMsg: null,
+  members: null, taskGroups: null, subtasks: null, me: null, tab: 'dashboard',
+  filterMember: null, calMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+  modal: null, errorMsg: null,
 };
+let pendingFocusGroup = null; // 빠른입력 후 다시 포커스할 그룹 id
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function fmtDate(s){ if(!s) return '기한 없음'; const d=new Date(s+'T00:00:00'); return (d.getMonth()+1)+'/'+d.getDate(); }
@@ -222,7 +245,7 @@ async function deleteTaskGroup(id){
 async function upsertSubtask(sub, isNew){
   const row = {
     task_group_id: sub.taskGroupId, content: sub.content, due_date: sub.dueDate || null,
-    status: sub.status, assignees: sub.assignees,
+    status: sub.status, assignees: sub.assignees || [],
   };
   let error;
   if(isNew){ ({error} = await sb.from('subtasks').insert(row)); }
@@ -254,7 +277,13 @@ function render(){
   if(state.me === null){ app.innerHTML = renderIdentityPick(); attachIdentityEvents(); return; }
   app.innerHTML = renderShell();
   attachShellEvents();
-  if(state.modal) renderModal();
+  // 모달이 열려있는 상태에서 실시간 동기화로 다시 그려질 때, 중복 생성 방지
+  if(state.modal && !document.getElementById('modal-overlay')) renderModal();
+  if(pendingFocusGroup){
+    const el = document.querySelector(`[data-qa-content="${pendingFocusGroup}"]`);
+    if(el) el.focus();
+    pendingFocusGroup = null;
+  }
 }
 function renderSetupScreen(){
   return `<div class="center-screen"><div class="setup-card">
@@ -270,12 +299,12 @@ function renderErrorScreen(){
   return `<div class="center-screen"><div class="setup-card">
     <div class="brand-mark display" style="background:var(--coral)">!</div><h2>연결에 문제가 있어요</h2>
     <div class="err-note">${escapeHtml(state.errorMsg)}</div>
-    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px">테이블이 새 구조(schema-update.sql)로 만들어졌는지 확인해주세요.</p>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px">테이블이 새 구조로 만들어졌는지 확인해주세요.</p>
     <button class="btn primary small" id="retry-btn" style="margin-top:8px">다시 시도</button>
   </div></div>`;
 }
 
-/* ---------------- ONBOARDING / IDENTITY (변경 없음) ---------------- */
+/* ---------------- ONBOARDING / IDENTITY ---------------- */
 function renderOnboarding(){
   return `<div class="center-screen"><div class="onboard-card">
     <div class="brand-mark display">C</div><h2>Cork에 오신 것을 환영해요</h2>
@@ -378,12 +407,15 @@ function renderDashboard(){
     return `<div class="group-card" data-group="${g.id}">
       <div class="group-head">
         <div class="group-title">${escapeHtml(g.title)}</div>
-        <div class="group-actions">
-          <button class="icon-btn danger" data-del-group="${g.id}">삭제</button>
-        </div>
+        <div class="group-actions"><button class="icon-btn danger" data-del-group="${g.id}">삭제</button></div>
       </div>
       <div class="sub-list">${rows}</div>
-      <button class="add-sub-btn" data-add-sub="${g.id}">＋ 세부 업무 추가</button>
+      <div class="quick-add-row">
+        <input type="text" data-qa-content="${g.id}" placeholder="할일 입력 후 Enter">
+        <input type="date" data-qa-due="${g.id}">
+        <button class="qa-submit" data-qa-submit="${g.id}">추가</button>
+        <button class="qa-detail" data-qa-detail="${g.id}" title="자세히 입력(담당자 등)">⋯</button>
+      </div>
     </div>`;
   }).join('');
 
@@ -402,11 +434,12 @@ function renderAssigneeStack(ids){
 function renderSubRow(s){
   const overdue = s.status!=='done' && s.dueDate && s.dueDate < todayStr();
   const stLabel = STATUS.find(x=>x.k===s.status)?.l || '';
-  return `<div class="sub-row" data-open-sub="${s.id}">
+  return `<div class="sub-row" data-sub-row="${s.id}">
     <button class="status-pill ${s.status}" data-cycle="${s.id}">${stLabel}</button>
-    <div class="sub-content ${s.status==='done'?'done':''}">${escapeHtml(s.content)}</div>
+    <span class="sub-content-text ${s.status==='done'?'done':''}" data-edit-content="${s.id}">${escapeHtml(s.content)}</span>
+    <button class="sub-due ${overdue?'overdue':''}" data-edit-due="${s.id}">${fmtDate(s.dueDate)}</button>
     ${renderAssigneeStack(s.assignees)}
-    <div class="sub-due ${overdue?'overdue':''}">${fmtDate(s.dueDate)}</div>
+    <button class="row-menu-btn" data-open-sub="${s.id}" title="자세히(담당자·상태)">⋯</button>
   </div>`;
 }
 
@@ -426,22 +459,69 @@ function renderCalendar(){
     const ds = c.y+'-'+String(c.m+1).padStart(2,'0')+'-'+String(c.d).padStart(2,'0');
     const isToday = ds === todayStr(); const items = (byDate[ds]||[]); const shown = items.slice(0,3); const more = items.length - shown.length;
     const chips = shown.map(s=>{ const m = memberById((s.assignees||[])[0]); return `<span class="cal-chip" style="background:${m?m.color:'#9AA3AF'}" data-open-sub="${s.id}">${escapeHtml(s.content)}</span>`; }).join('');
-    return `<div class="cal-cell ${c.out?'out':''} ${isToday?'today':''}"><div class="cal-daynum">${c.d}</div>${chips}${more>0?`<div class="cal-more">+${more}개 더</div>`:''}</div>`;
+    return `<div class="cal-cell ${c.out?'out':''} ${isToday?'today':''}" data-open-day="${ds}"><div class="cal-daynum">${c.d}</div>${chips}${more>0?`<div class="cal-more">+${more}개 더</div>`:''}</div>`;
   }).join('');
   const monthLabel = y+'년 '+(mo+1)+'월';
   return `<div class="cal-head"><div class="m-title">${monthLabel}</div><div class="cal-nav"><button id="cal-prev">‹</button><button id="cal-next">›</button></div></div>
     <div class="cal-grid">${dow}${cellsHtml}</div>`;
 }
 
-/* ---------------- MODALS ---------------- */
+/* ---------------- MODALS (상세보기 전용) ---------------- */
 function openGroupModal(){ state.modal = {type:'group'}; renderModal(); }
-function openSubModal(mode, taskGroupId, subId){ state.modal = {type:'sub', mode, taskGroupId, subId}; renderModal(); }
+function openSubModal(mode, taskGroupId, subId, prefill){ state.modal = {type:'sub', mode, taskGroupId, subId, prefill}; renderModal(); }
+function openDayModal(date){ state.modal = {type:'day', date}; renderModal(); }
 function closeModal(){ state.modal = null; const ov=document.getElementById('modal-overlay'); if(ov) ov.remove(); }
 
 function renderModal(){
+  const existing = document.getElementById('modal-overlay');
+  if(existing) existing.remove();
   const m = state.modal;
   if(m.type==='group') return renderGroupModal();
+  if(m.type==='day') return renderDayModal();
   return renderSubModal();
+}
+function renderDayModal(){
+  const date = state.modal.date;
+  const d = new Date(date+'T00:00:00');
+  const dowNames = ['일','월','화','수','목','금','토'];
+  const label = (d.getMonth()+1)+'월 '+d.getDate()+'일 ('+dowNames[d.getDay()]+')';
+  let items = allVisibleSubtasks().filter(s=>s.dueDate===date);
+  items = items.sort((a,b)=> STATUS_RANK[a.status]-STATUS_RANK[b.status]);
+
+  const rows = items.map(s=>{
+    const g = state.taskGroups.find(x=>x.id===s.taskGroupId);
+    const stLabel = STATUS.find(x=>x.k===s.status)?.l || '';
+    return `<div class="day-item" data-open-sub="${s.id}">
+      <button class="status-pill ${s.status}" data-cycle="${s.id}">${stLabel}</button>
+      <div class="di-group">${escapeHtml(g?g.title:'')}</div>
+      <div class="di-content ${s.status==='done'?'done':''}">${escapeHtml(s.content)}</div>
+      ${renderAssigneeStack(s.assignees)}
+    </div>`;
+  }).join('') || `<div class="day-empty">이 날은 예정된 세부 업무가 없어요.</div>`;
+
+  const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='modal-overlay';
+  overlay.innerHTML = `<div class="modal-day">
+    <div class="day-header">
+      <div><div class="d-title">${label}</div><div class="d-count">세부 업무 ${items.length}개</div></div>
+      <button class="day-close" id="day-close-btn">×</button>
+    </div>
+    <div>${rows}</div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',(e)=>{ if(e.target===overlay) closeModal(); });
+  document.getElementById('day-close-btn').onclick = closeModal;
+
+  document.querySelectorAll('.day-item [data-cycle]').forEach(b=>{
+    b.onclick = (e)=>{ e.stopPropagation(); const s=state.subtasks.find(x=>x.id===b.dataset.cycle); if(s) cycleStatus(s); };
+  });
+  document.querySelectorAll('.day-item[data-open-sub]').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      if(e.target.closest('[data-cycle]')) return;
+      const id = el.dataset.openSub;
+      const s = state.subtasks.find(x=>x.id===id);
+      if(s) openSubModal('edit', s.taskGroupId, id);
+    });
+  });
 }
 function renderGroupModal(){
   const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='modal-overlay';
@@ -465,12 +545,13 @@ function renderSubModal(){
   const isNew = m.mode==='new';
   const existing = isNew ? null : state.subtasks.find(x=>x.id===m.subId);
   const group = state.taskGroups.find(g=>g.id===m.taskGroupId);
-  const s = isNew ? {content:'', dueDate:'', status:'todo', assignees: state.me?[state.me]:[]} : existing;
+  const pf = m.prefill || {};
+  const s = isNew ? {content:pf.content||'', dueDate:pf.dueDate||'', status:'todo', assignees: state.me?[state.me]:[]} : existing;
   let selected = new Set(s.assignees||[]);
 
   const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='modal-overlay';
   overlay.innerHTML = `<div class="modal">
-    <h3>${isNew?'새 세부 업무':'세부 업무 수정'} · <span style="font-weight:400;color:var(--ink-soft);font-size:13px">${escapeHtml(group?group.title:'')}</span></h3>
+    <h3>${isNew?'새 세부 업무':'세부 업무 자세히'} · <span style="font-weight:400;color:var(--ink-soft);font-size:13px">${escapeHtml(group?group.title:'')}</span></h3>
     <div class="field"><label>세부 내용</label><input type="text" id="s-content" value="${escapeAttr(s.content)}" placeholder="예: 시안 초안 작성"></div>
     <div class="row2">
       <div class="field"><label>기한</label><input type="date" id="s-due" value="${s.dueDate||''}"></div>
@@ -506,30 +587,111 @@ function renderSubModal(){
       status: document.getElementById('s-status').value,
       assignees: Array.from(selected),
     };
+    state.modal = null; // 저장 중 재렌더로 모달이 중복 생성되지 않도록 먼저 비움
     const ok = await upsertSubtask(payload, isNew);
-    if(ok) closeModal();
+    if(!ok){ /* 실패 시 별다른 처리 없음, alert로 이미 안내됨 */ }
+    closeModal();
   };
   document.getElementById('s-content').focus();
 }
 
+/* ---------------- INLINE EDIT HELPERS ---------------- */
+function startInlineContentEdit(row, sub){
+  const span = row.querySelector(`[data-edit-content="${sub.id}"]`);
+  if(!span) return;
+  const input = document.createElement('input');
+  input.type = 'text'; input.className = 'inline-edit-input'; input.value = sub.content;
+  span.replaceWith(input); input.focus(); input.select();
+  let done = false;
+  const commit = async ()=>{
+    if(done) return; done = true;
+    const val = input.value.trim();
+    if(val && val !== sub.content){ await upsertSubtask({...sub, content: val}, false); }
+    else{ render(); }
+  };
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter') input.blur();
+    if(e.key==='Escape'){ done = true; render(); }
+  });
+}
+function startInlineDueEdit(row, sub){
+  const btn = row.querySelector(`[data-edit-due="${sub.id}"]`);
+  if(!btn) return;
+  const input = document.createElement('input');
+  input.type = 'date'; input.className = 'inline-edit-date'; input.value = sub.dueDate || '';
+  btn.replaceWith(input); input.focus();
+  let done = false;
+  const commit = async ()=>{
+    if(done) return; done = true;
+    await upsertSubtask({...sub, dueDate: input.value}, false);
+  };
+  input.addEventListener('change', commit);
+  input.addEventListener('blur', ()=>{ if(!done){ done=true; render(); } });
+}
+
 /* ---------------- EVENTS ---------------- */
 function attachShellEvents(){
-  document.querySelectorAll('nav.tabs [data-tab]').forEach(b=>{ b.onclick=()=>{ state.tab=b.dataset.tab; render(); }; });
+  const appRoot = document.getElementById('app'); // 모달(overlay)은 body 직속이라 여기 범위에 안 들어옴 → 이벤트 중복 바인딩 방지
+  appRoot.querySelectorAll('nav.tabs [data-tab]').forEach(b=>{ b.onclick=()=>{ state.tab=b.dataset.tab; render(); }; });
   document.getElementById('switch-me').onclick=()=>{ state.me=null; render(); };
   document.getElementById('add-member-chip').onclick=()=>{ document.getElementById('app').innerHTML=renderOnboarding(); attachOnboardEvents(); const d=document.getElementById('ob-done'); d.textContent='← 돌아가기'; d.onclick=()=>render(); };
-  document.querySelectorAll('#roster [data-filter]').forEach(c=>{ c.onclick=()=>{ const f=c.dataset.filter; state.filterMember=(f==='__all__')?null:(state.filterMember===f?null:f); render(); }; });
+  appRoot.querySelectorAll('#roster [data-filter]').forEach(c=>{ c.onclick=()=>{ const f=c.dataset.filter; state.filterMember=(f==='__all__')?null:(state.filterMember===f?null:f); render(); }; });
 
   const newGroupBtn = document.getElementById('new-group-btn');
   if(newGroupBtn) newGroupBtn.onclick = openGroupModal;
 
-  document.querySelectorAll('[data-del-group]').forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); deleteTaskGroup(b.dataset.delGroup); }; });
-  document.querySelectorAll('[data-add-sub]').forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); openSubModal('new', b.dataset.addSub, null); }; });
-  document.querySelectorAll('[data-cycle]').forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); const s=state.subtasks.find(x=>x.id===b.dataset.cycle); if(s) cycleStatus(s); }; });
-  document.querySelectorAll('[data-open-sub]').forEach(el=>{
+  appRoot.querySelectorAll('[data-del-group]').forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); deleteTaskGroup(b.dataset.delGroup); }; });
+
+  // 상태 배지 클릭 → 순환
+  appRoot.querySelectorAll('[data-cycle]').forEach(b=>{ b.onclick=(e)=>{ e.stopPropagation(); const s=state.subtasks.find(x=>x.id===b.dataset.cycle); if(s) cycleStatus(s); }; });
+
+  // 인라인 내용 수정
+  appRoot.querySelectorAll('[data-edit-content]').forEach(span=>{
+    span.onclick = ()=>{
+      const id = span.dataset.editContent;
+      const s = state.subtasks.find(x=>x.id===id);
+      const row = span.closest('[data-sub-row]');
+      if(s && row) startInlineContentEdit(row, s);
+    };
+  });
+  // 인라인 기한 수정
+  appRoot.querySelectorAll('[data-edit-due]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const id = btn.dataset.editDue;
+      const s = state.subtasks.find(x=>x.id===id);
+      const row = btn.closest('[data-sub-row]');
+      if(s && row) startInlineDueEdit(row, s);
+    };
+  });
+  // 자세히(⋯) / 캘린더 칩 → 담당자·상태 모달
+  appRoot.querySelectorAll('[data-open-sub]').forEach(el=>{
     el.onclick=(e)=>{
+      e.stopPropagation();
       const id = el.dataset.openSub;
       const s = state.subtasks.find(x=>x.id===id);
       if(s) openSubModal('edit', s.taskGroupId, id);
+    };
+  });
+  // 캘린더 날짜 칸 클릭 → 그 날 전체보기 (칩 클릭은 위에서 stopPropagation 되어 여기로 안 옴)
+  appRoot.querySelectorAll('[data-open-day]').forEach(cell=>{
+    cell.onclick = ()=> openDayModal(cell.dataset.openDay);
+  });
+
+  // 빠른 추가 (할일 + 기한, Enter/버튼)
+  appRoot.querySelectorAll('[data-qa-submit]').forEach(btn=>{
+    btn.onclick = ()=> submitQuickAdd(btn.dataset.qaSubmit);
+  });
+  appRoot.querySelectorAll('[data-qa-content]').forEach(inp=>{
+    inp.onkeydown = (e)=>{ if(e.key==='Enter') submitQuickAdd(inp.dataset.qaContent); };
+  });
+  // 빠른 추가 옆 ⋯ → 담당자까지 지정해서 새로 만들기 (입력해둔 값 이어받음)
+  appRoot.querySelectorAll('[data-qa-detail]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const gid = btn.dataset.qaDetail;
+      const contentEl = appRoot.querySelector(`[data-qa-content="${gid}"]`);
+      const dueEl = appRoot.querySelector(`[data-qa-due="${gid}"]`);
+      openSubModal('new', gid, null, {content: contentEl?contentEl.value.trim():'', dueDate: dueEl?dueEl.value:''});
     };
   });
 
@@ -538,6 +700,15 @@ function attachShellEvents(){
     if(prev) prev.onclick=()=>{ state.calMonth=new Date(state.calMonth.getFullYear(), state.calMonth.getMonth()-1, 1); render(); };
     if(next) next.onclick=()=>{ state.calMonth=new Date(state.calMonth.getFullYear(), state.calMonth.getMonth()+1, 1); render(); };
   }
+}
+async function submitQuickAdd(groupId){
+  const contentEl = document.querySelector(`[data-qa-content="${groupId}"]`);
+  const dueEl = document.querySelector(`[data-qa-due="${groupId}"]`);
+  const content = contentEl ? contentEl.value.trim() : '';
+  if(!content){ if(contentEl) contentEl.focus(); return; }
+  const dueDate = dueEl ? dueEl.value : '';
+  pendingFocusGroup = groupId;
+  await upsertSubtask({taskGroupId: groupId, content, dueDate, status:'todo', assignees: state.me?[state.me]:[]}, true);
 }
 
 /* ---------------- INIT ---------------- */
