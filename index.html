@@ -22,7 +22,8 @@
   }
   .mono{font-family:'JetBrains Mono',monospace;}
   .display{font-family:'Space Grotesk',sans-serif;}
-  #app{max-width:920px;margin:0 auto;padding:20px 20px 80px;}
+  #app{max-width:920px;margin:0 auto;padding:20px 20px 80px;transition:max-width .15s;}
+  #app.wide{max-width:1400px;}
   header.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 4px 18px;flex-wrap:wrap;gap:12px;}
   .brand{display:flex;align-items:center;gap:10px;}
   .brand-mark{width:34px;height:34px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center;color:white;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;box-shadow:var(--shadow-pin);transform:rotate(-4deg);}
@@ -80,6 +81,10 @@
   .row-menu-btn{flex:none;border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px;letter-spacing:1px;}
   .row-menu-btn:hover{background:var(--line);color:var(--ink);}
   .empty-sub{color:var(--ink-soft);font-size:12px;padding:10px 6px;}
+  .sub-item{border-bottom:1px solid var(--paper);}
+  .sub-item:last-child{border-bottom:none;}
+  .sub-item .sub-row{border-bottom:none;}
+  .sub-note-preview{font-size:11.5px;color:#9AA3AF;padding:0 6px 8px 44px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .empty-state{color:var(--ink-soft);font-size:13px;text-align:center;padding:50px 10px;}
 
   .quick-add-row{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
@@ -93,19 +98,21 @@
 
   /* ---- Calendar ---- */
   .cal-head{display:flex;align-items:center;justify-content:space-between;padding:0 4px 12px;}
-  .cal-head .m-title{font-family:'Space Grotesk';font-weight:700;font-size:18px;}
+  .cal-head .m-title{font-family:'Space Grotesk';font-weight:700;font-size:20px;}
   .cal-nav{display:flex;gap:6px;}
-  .cal-nav button{width:30px;height:30px;border-radius:7px;border:1px solid var(--line);background:var(--paper-raised);cursor:pointer;font-size:14px;color:var(--ink-soft);}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:0 4px;}
-  .cal-dow{font-size:11px;color:var(--ink-soft);text-align:center;padding-bottom:4px;font-weight:600;}
-  .cal-cell{background:var(--paper-raised);border:1px solid var(--line);border-radius:8px;min-height:92px;padding:6px;display:flex;flex-direction:column;gap:3px;}
+  .cal-nav button{width:32px;height:32px;border-radius:7px;border:1px solid var(--line);background:var(--paper-raised);cursor:pointer;font-size:15px;color:var(--ink-soft);}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;padding:0 4px;}
+  .cal-dow{font-size:12px;color:var(--ink-soft);text-align:center;padding-bottom:6px;font-weight:700;}
+  .cal-dow.weekend{color:var(--coral);}
+  .cal-cell{background:var(--paper-raised);border:1px solid var(--line);border-radius:9px;min-height:150px;padding:8px;display:flex;flex-direction:column;gap:4px;cursor:pointer;}
   .cal-cell.out{opacity:.35;}
   .cal-cell.today{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal) inset;}
-  .cal-daynum{font-family:'JetBrains Mono';font-size:11px;color:var(--ink-soft);}
-  .cal-chip{font-size:10.5px;padding:2px 5px;border-radius:5px;color:white;font-weight:600;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .cal-more{font-size:10px;color:var(--ink-soft);}
-  .cal-cell{cursor:pointer;}
   .cal-cell:hover{border-color:var(--teal);}
+  .cal-daynum{font-family:'JetBrains Mono';font-size:12px;color:var(--ink-soft);font-weight:600;}
+  .cal-daynum.weekend{color:var(--coral);}
+  .cal-holiday-label{font-size:9.5px;color:var(--coral);font-weight:700;margin:-2px 0 1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .cal-chip{font-size:11px;padding:3px 6px;border-radius:5px;color:white;font-weight:600;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cal-more{font-size:10.5px;color:var(--ink-soft);padding:1px 2px;}
 
   .modal-day{background:var(--paper-raised);border-radius:16px;max-width:720px;width:95%;max-height:88vh;overflow-y:auto;padding:26px 26px 22px;box-shadow:0 25px 70px -25px rgba(0,0,0,.45);}
   .day-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;}
@@ -127,6 +134,11 @@
   .field{margin-bottom:13px;}
   .field label{display:block;font-size:11.5px;font-weight:600;color:var(--ink-soft);margin-bottom:5px;text-transform:uppercase;letter-spacing:.03em;}
   .field input[type=text], .field input[type=date], .field select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:7px;font-size:13.5px;font-family:'Inter';background:var(--paper);}
+  .field-head-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+  .field-head-row label{margin-bottom:0;}
+  .notes-toggle{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-soft);font-weight:600;cursor:pointer;text-transform:none;letter-spacing:0;}
+  .notes-toggle input{width:14px;height:14px;accent-color:var(--teal);}
+  #s-notes{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:7px;font-size:13px;font-family:'Inter';background:var(--paper);resize:vertical;min-height:70px;}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .assignee-picker{display:flex;flex-wrap:wrap;gap:6px;}
   .assignee-opt{display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--paper);font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink-soft);}
@@ -173,6 +185,15 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const PALETTE = ['#2A9D8F','#E76F51','#8E7DBE','#4C93B0','#D46A9F','#7C9070','#E9B949','#6B7B8C'];
 const STATUS = [{k:'todo',l:'할 일'},{k:'doing',l:'진행중'},{k:'done',l:'완료'}];
+// 2026년 대한민국 공휴일 (공공데이터포털 특일정보 기준, 2026-08-23 확인)
+const HOLIDAYS_KR = {
+  '2026-01-01':'신정', '2026-02-16':'설날 연휴', '2026-02-17':'설날', '2026-02-18':'설날 연휴',
+  '2026-03-01':'삼일절', '2026-03-02':'대체공휴일', '2026-05-01':'노동절', '2026-05-05':'어린이날',
+  '2026-05-24':'부처님오신날', '2026-05-25':'대체공휴일', '2026-06-03':'지방선거', '2026-06-06':'현충일',
+  '2026-07-17':'제헌절', '2026-08-15':'광복절', '2026-08-17':'대체공휴일',
+  '2026-09-24':'추석 연휴', '2026-09-25':'추석', '2026-09-26':'추석 연휴',
+  '2026-10-03':'개천절', '2026-10-05':'대체공휴일', '2026-10-09':'한글날', '2026-12-25':'크리스마스',
+};
 const STATUS_RANK = {todo:0, doing:1, done:2};
 
 const needsSetup = SUPABASE_URL.includes('YOUR_SUPABASE') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE');
@@ -206,7 +227,7 @@ async function loadAll(){
     state.taskGroups = groups.map(g=>({id:g.id, title:g.title}));
     state.subtasks = subs.map(s=>({
       id:s.id, taskGroupId:s.task_group_id, content:s.content, dueDate:s.due_date,
-      status:s.status, assignees:s.assignees||[]
+      status:s.status, assignees:s.assignees||[], notes:s.notes||'', showNotes:!!s.show_notes
     }));
     state.errorMsg = null;
   }catch(err){ state.errorMsg = (err && err.message) ? err.message : String(err); }
@@ -245,7 +266,7 @@ async function deleteTaskGroup(id){
 async function upsertSubtask(sub, isNew){
   const row = {
     task_group_id: sub.taskGroupId, content: sub.content, due_date: sub.dueDate || null,
-    status: sub.status, assignees: sub.assignees || [],
+    status: sub.status, assignees: sub.assignees || [], notes: sub.notes || '', show_notes: !!sub.showNotes,
   };
   let error;
   if(isNew){ ({error} = await sb.from('subtasks').insert(row)); }
@@ -270,12 +291,13 @@ async function cycleStatus(sub){
 /* ---------------- RENDER ROOT ---------------- */
 function render(){
   const app = document.getElementById('app');
-  if(needsSetup){ app.innerHTML = renderSetupScreen(); return; }
-  if(state.errorMsg){ app.innerHTML = renderErrorScreen(); return; }
-  if(state.members === null){ app.innerHTML = '<div class="loading-note">불러오는 중…</div>'; return; }
-  if(state.members.length === 0){ app.innerHTML = renderOnboarding(); attachOnboardEvents(); return; }
-  if(state.me === null){ app.innerHTML = renderIdentityPick(); attachIdentityEvents(); return; }
+  if(needsSetup){ app.classList.remove('wide'); app.innerHTML = renderSetupScreen(); return; }
+  if(state.errorMsg){ app.classList.remove('wide'); app.innerHTML = renderErrorScreen(); return; }
+  if(state.members === null){ app.classList.remove('wide'); app.innerHTML = '<div class="loading-note">불러오는 중…</div>'; return; }
+  if(state.members.length === 0){ app.classList.remove('wide'); app.innerHTML = renderOnboarding(); attachOnboardEvents(); return; }
+  if(state.me === null){ app.classList.remove('wide'); app.innerHTML = renderIdentityPick(); attachIdentityEvents(); return; }
   app.innerHTML = renderShell();
+  app.classList.toggle('wide', state.tab==='calendar');
   attachShellEvents();
   // 모달이 열려있는 상태에서 실시간 동기화로 다시 그려질 때, 중복 생성 방지
   if(state.modal && !document.getElementById('modal-overlay')) renderModal();
@@ -434,12 +456,15 @@ function renderAssigneeStack(ids){
 function renderSubRow(s){
   const overdue = s.status!=='done' && s.dueDate && s.dueDate < todayStr();
   const stLabel = STATUS.find(x=>x.k===s.status)?.l || '';
-  return `<div class="sub-row" data-sub-row="${s.id}">
-    <button class="status-pill ${s.status}" data-cycle="${s.id}">${stLabel}</button>
-    <span class="sub-content-text ${s.status==='done'?'done':''}" data-edit-content="${s.id}">${escapeHtml(s.content)}</span>
-    <button class="sub-due ${overdue?'overdue':''}" data-edit-due="${s.id}">${fmtDate(s.dueDate)}</button>
-    ${renderAssigneeStack(s.assignees)}
-    <button class="row-menu-btn" data-open-sub="${s.id}" title="자세히(담당자·상태)">⋯</button>
+  return `<div class="sub-item">
+    <div class="sub-row" data-sub-row="${s.id}">
+      <button class="status-pill ${s.status}" data-cycle="${s.id}">${stLabel}</button>
+      <span class="sub-content-text ${s.status==='done'?'done':''}" data-edit-content="${s.id}">${escapeHtml(s.content)}</span>
+      <button class="sub-due ${overdue?'overdue':''}" data-edit-due="${s.id}">${fmtDate(s.dueDate)}</button>
+      ${renderAssigneeStack(s.assignees)}
+      <button class="row-menu-btn" data-open-sub="${s.id}" title="자세히(담당자·상태·세부내용)">⋯</button>
+    </div>
+    ${s.showNotes && s.notes ? `<div class="sub-note-preview">${escapeHtml(s.notes)}</div>` : ''}
   </div>`;
 }
 
@@ -454,12 +479,20 @@ function renderCalendar(){
   while(cells.length % 7 !== 0 || cells.length < 35) cells.push({d:cells.length-startOffset-daysInMonth+1, out:true, y: mo===11?y+1:y, m: mo===11?0:mo+1});
   const subs = allVisibleSubtasks(); const byDate = {};
   subs.forEach(s=>{ if(s.dueDate){ (byDate[s.dueDate] = byDate[s.dueDate]||[]).push(s); } });
-  const dow = ['일','월','화','수','목','금','토'].map(n=>`<div class="cal-dow">${n}</div>`).join('');
-  const cellsHtml = cells.map(c=>{
+  const dowNames = ['일','월','화','수','목','금','토'];
+  const dow = dowNames.map((n,i)=>`<div class="cal-dow ${(i===0||i===6)?'weekend':''}">${n}</div>`).join('');
+  const cellsHtml = cells.map((c,idx)=>{
     const ds = c.y+'-'+String(c.m+1).padStart(2,'0')+'-'+String(c.d).padStart(2,'0');
-    const isToday = ds === todayStr(); const items = (byDate[ds]||[]); const shown = items.slice(0,3); const more = items.length - shown.length;
+    const isToday = ds === todayStr(); const items = (byDate[ds]||[]); const shown = items.slice(0,6); const more = items.length - shown.length;
+    const col = idx % 7; const isWeekend = col===0 || col===6;
+    const holidayName = HOLIDAYS_KR[ds];
+    const isRed = isWeekend || !!holidayName;
     const chips = shown.map(s=>{ const m = memberById((s.assignees||[])[0]); return `<span class="cal-chip" style="background:${m?m.color:'#9AA3AF'}" data-open-sub="${s.id}">${escapeHtml(s.content)}</span>`; }).join('');
-    return `<div class="cal-cell ${c.out?'out':''} ${isToday?'today':''}" data-open-day="${ds}"><div class="cal-daynum">${c.d}</div>${chips}${more>0?`<div class="cal-more">+${more}개 더</div>`:''}</div>`;
+    return `<div class="cal-cell ${c.out?'out':''} ${isToday?'today':''}" data-open-day="${ds}">
+      <div class="cal-daynum ${isRed?'weekend':''}">${c.d}</div>
+      ${holidayName?`<div class="cal-holiday-label">${escapeHtml(holidayName)}</div>`:''}
+      ${chips}${more>0?`<div class="cal-more">+${more}개 더</div>`:''}
+    </div>`;
   }).join('');
   const monthLabel = y+'년 '+(mo+1)+'월';
   return `<div class="cal-head"><div class="m-title">${monthLabel}</div><div class="cal-nav"><button id="cal-prev">‹</button><button id="cal-next">›</button></div></div>
@@ -546,16 +579,23 @@ function renderSubModal(){
   const existing = isNew ? null : state.subtasks.find(x=>x.id===m.subId);
   const group = state.taskGroups.find(g=>g.id===m.taskGroupId);
   const pf = m.prefill || {};
-  const s = isNew ? {content:pf.content||'', dueDate:pf.dueDate||'', status:'todo', assignees: state.me?[state.me]:[]} : existing;
+  const s = isNew ? {content:pf.content||'', dueDate:pf.dueDate||'', status:'todo', assignees: state.me?[state.me]:[], notes:'', showNotes:false} : existing;
   let selected = new Set(s.assignees||[]);
 
   const overlay = document.createElement('div'); overlay.className='overlay'; overlay.id='modal-overlay';
   overlay.innerHTML = `<div class="modal">
     <h3>${isNew?'새 세부 업무':'세부 업무 자세히'} · <span style="font-weight:400;color:var(--ink-soft);font-size:13px">${escapeHtml(group?group.title:'')}</span></h3>
-    <div class="field"><label>세부 내용</label><input type="text" id="s-content" value="${escapeAttr(s.content)}" placeholder="예: 시안 초안 작성"></div>
+    <div class="field"><label>내용</label><input type="text" id="s-content" value="${escapeAttr(s.content)}" placeholder="예: 시안 초안 작성"></div>
     <div class="row2">
       <div class="field"><label>기한</label><input type="date" id="s-due" value="${s.dueDate||''}"></div>
       <div class="field"><label>상태</label><select id="s-status">${STATUS.map(x=>`<option value="${x.k}" ${x.k===s.status?'selected':''}>${x.l}</option>`).join('')}</select></div>
+    </div>
+    <div class="field">
+      <div class="field-head-row">
+        <label>세부 내용</label>
+        <label class="notes-toggle"><input type="checkbox" id="s-shownotes" ${s.showNotes?'checked':''}>목록에 미리보기 표시</label>
+      </div>
+      <textarea id="s-notes" rows="4" placeholder="메모, 참고 링크, 자세한 설명 등을 적어보세요">${escapeHtml(s.notes||'')}</textarea>
     </div>
     <div class="field"><label>담당자 (여러 명 선택 가능)</label>
       <div class="assignee-picker" id="assignee-picker">
@@ -586,6 +626,8 @@ function renderSubModal(){
       dueDate: document.getElementById('s-due').value,
       status: document.getElementById('s-status').value,
       assignees: Array.from(selected),
+      notes: document.getElementById('s-notes').value,
+      showNotes: document.getElementById('s-shownotes').checked,
     };
     state.modal = null; // 저장 중 재렌더로 모달이 중복 생성되지 않도록 먼저 비움
     const ok = await upsertSubtask(payload, isNew);
