@@ -63,13 +63,16 @@
   .sub-row{display:flex;align-items:center;gap:8px;padding:8px 6px;border-radius:8px;border-bottom:1px solid var(--paper);}
   .sub-row:last-child{border-bottom:none;}
   .sub-row:hover{background:var(--paper);}
-  .status-pill{flex:none;border:none;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter';}
-  .status-pill.todo{background:#E7E9EC;color:var(--ink-soft);}
-  .status-pill.doing{background:#FCF1D8;color:#A87A15;}
-  .status-pill.done{background:#DDEFEA;color:var(--teal-deep);}
-  .sub-content-text{flex:1;font-size:13.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:text;padding:3px 5px;border-radius:5px;}
+  .status-check{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--paper-raised);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:12px;font-weight:900;color:transparent;line-height:1;}
+  .status-check.doing{border-color:var(--amber);}
+  .status-check.doing::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--amber);}
+  .status-check.done{border-color:var(--teal);background:var(--teal);color:white;}
+  .status-check.done::after{content:'✓';}
+  .sub-content-wrap{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px;overflow:hidden;white-space:nowrap;}
+  .sub-content-text{flex:none;font-size:13.5px;cursor:text;padding:3px 5px;border-radius:5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
   .sub-content-text:hover{background:#fff;box-shadow:0 0 0 1px var(--line) inset;}
   .sub-content-text.done{color:var(--ink-soft);text-decoration:line-through;}
+  .sub-note-inline{flex:1;min-width:0;font-size:11.5px;color:#9AA3AF;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .assignee-stack{display:flex;align-items:center;flex:none;}
   .assignee-stack .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--paper-raised);margin-left:-6px;display:flex;align-items:center;justify-content:center;color:white;font-size:9px;font-weight:700;}
   .assignee-stack .dot:first-child{margin-left:0;}
@@ -81,10 +84,6 @@
   .row-menu-btn{flex:none;border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px;letter-spacing:1px;}
   .row-menu-btn:hover{background:var(--line);color:var(--ink);}
   .empty-sub{color:var(--ink-soft);font-size:12px;padding:10px 6px;}
-  .sub-item{border-bottom:1px solid var(--paper);}
-  .sub-item:last-child{border-bottom:none;}
-  .sub-item .sub-row{border-bottom:none;}
-  .sub-note-preview{font-size:11.5px;color:#9AA3AF;padding:0 6px 8px 44px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .empty-state{color:var(--ink-soft);font-size:13px;text-align:center;padding:50px 10px;}
 
   .quick-add-row{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
@@ -195,13 +194,16 @@ const HOLIDAYS_KR = {
   '2026-10-03':'개천절', '2026-10-05':'대체공휴일', '2026-10-09':'한글날', '2026-12-25':'크리스마스',
 };
 const STATUS_RANK = {todo:0, doing:1, done:2};
+const LS_ME = 'cork_me';
+const LS_TAB = 'cork_tab';
 
 const needsSetup = SUPABASE_URL.includes('YOUR_SUPABASE') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE');
 let sb = null;
 if(!needsSetup){ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
 
 let state = {
-  members: null, taskGroups: null, subtasks: null, me: null, tab: 'dashboard',
+  members: null, taskGroups: null, subtasks: null, me: null,
+  tab: (localStorage.getItem(LS_TAB) === 'calendar') ? 'calendar' : 'dashboard',
   filterMember: null, calMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   modal: null, errorMsg: null,
 };
@@ -295,6 +297,10 @@ function render(){
   if(state.errorMsg){ app.classList.remove('wide'); app.innerHTML = renderErrorScreen(); return; }
   if(state.members === null){ app.classList.remove('wide'); app.innerHTML = '<div class="loading-note">불러오는 중…</div>'; return; }
   if(state.members.length === 0){ app.classList.remove('wide'); app.innerHTML = renderOnboarding(); attachOnboardEvents(); return; }
+  if(state.me === null){
+    const savedMe = localStorage.getItem(LS_ME);
+    if(savedMe && state.members.find(m=>m.id===savedMe)) state.me = savedMe;
+  }
   if(state.me === null){ app.classList.remove('wide'); app.innerHTML = renderIdentityPick(); attachIdentityEvents(); return; }
   app.innerHTML = renderShell();
   app.classList.toggle('wide', state.tab==='calendar');
@@ -359,7 +365,7 @@ function renderIdentityPick(){
   </div></div>`;
 }
 function attachIdentityEvents(){
-  document.querySelectorAll('#id-pick [data-id]').forEach(b=>{ b.onclick=()=>{ state.me=b.dataset.id; render(); }; });
+  document.querySelectorAll('#id-pick [data-id]').forEach(b=>{ b.onclick=()=>{ state.me=b.dataset.id; localStorage.setItem(LS_ME, b.dataset.id); render(); }; });
   document.getElementById('id-manage').onclick=()=>{ document.getElementById('app').innerHTML=renderOnboarding(); attachOnboardEvents(); const d=document.getElementById('ob-done'); d.textContent='← 돌아가기'; d.onclick=()=>render(); };
 }
 
@@ -456,15 +462,15 @@ function renderAssigneeStack(ids){
 function renderSubRow(s){
   const overdue = s.status!=='done' && s.dueDate && s.dueDate < todayStr();
   const stLabel = STATUS.find(x=>x.k===s.status)?.l || '';
-  return `<div class="sub-item">
-    <div class="sub-row" data-sub-row="${s.id}">
-      <button class="status-pill ${s.status}" data-cycle="${s.id}">${stLabel}</button>
+  return `<div class="sub-row" data-sub-row="${s.id}">
+    <button class="status-check ${s.status}" data-cycle="${s.id}" title="${stLabel} (클릭하면 다음 단계로)"></button>
+    <div class="sub-content-wrap">
       <span class="sub-content-text ${s.status==='done'?'done':''}" data-edit-content="${s.id}">${escapeHtml(s.content)}</span>
-      <button class="sub-due ${overdue?'overdue':''}" data-edit-due="${s.id}">${fmtDate(s.dueDate)}</button>
-      ${renderAssigneeStack(s.assignees)}
-      <button class="row-menu-btn" data-open-sub="${s.id}" title="자세히(담당자·상태·세부내용)">⋯</button>
+      ${s.showNotes && s.notes ? `<span class="sub-note-inline">${escapeHtml(s.notes)}</span>` : ''}
     </div>
-    ${s.showNotes && s.notes ? `<div class="sub-note-preview">${escapeHtml(s.notes)}</div>` : ''}
+    <button class="sub-due ${overdue?'overdue':''}" data-edit-due="${s.id}">${fmtDate(s.dueDate)}</button>
+    ${renderAssigneeStack(s.assignees)}
+    <button class="row-menu-btn" data-open-sub="${s.id}" title="자세히(담당자·상태·세부내용)">⋯</button>
   </div>`;
 }
 
@@ -525,7 +531,7 @@ function renderDayModal(){
     const g = state.taskGroups.find(x=>x.id===s.taskGroupId);
     const stLabel = STATUS.find(x=>x.k===s.status)?.l || '';
     return `<div class="day-item" data-open-sub="${s.id}">
-      <button class="status-pill ${s.status}" data-cycle="${s.id}">${stLabel}</button>
+      <button class="status-check ${s.status}" data-cycle="${s.id}" title="${stLabel}"></button>
       <div class="di-group">${escapeHtml(g?g.title:'')}</div>
       <div class="di-content ${s.status==='done'?'done':''}">${escapeHtml(s.content)}</div>
       ${renderAssigneeStack(s.assignees)}
@@ -675,8 +681,8 @@ function startInlineDueEdit(row, sub){
 /* ---------------- EVENTS ---------------- */
 function attachShellEvents(){
   const appRoot = document.getElementById('app'); // 모달(overlay)은 body 직속이라 여기 범위에 안 들어옴 → 이벤트 중복 바인딩 방지
-  appRoot.querySelectorAll('nav.tabs [data-tab]').forEach(b=>{ b.onclick=()=>{ state.tab=b.dataset.tab; render(); }; });
-  document.getElementById('switch-me').onclick=()=>{ state.me=null; render(); };
+  appRoot.querySelectorAll('nav.tabs [data-tab]').forEach(b=>{ b.onclick=()=>{ state.tab=b.dataset.tab; localStorage.setItem(LS_TAB, state.tab); render(); }; });
+  document.getElementById('switch-me').onclick=()=>{ state.me=null; localStorage.removeItem(LS_ME); render(); };
   document.getElementById('add-member-chip').onclick=()=>{ document.getElementById('app').innerHTML=renderOnboarding(); attachOnboardEvents(); const d=document.getElementById('ob-done'); d.textContent='← 돌아가기'; d.onclick=()=>render(); };
   appRoot.querySelectorAll('#roster [data-filter]').forEach(c=>{ c.onclick=()=>{ const f=c.dataset.filter; state.filterMember=(f==='__all__')?null:(state.filterMember===f?null:f); render(); }; });
 
